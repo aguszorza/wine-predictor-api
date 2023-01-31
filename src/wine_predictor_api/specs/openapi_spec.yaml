@@ -1,0 +1,169 @@
+openapi: 3.0.0
+
+info:
+  title: Wine Quality Estimation API
+  version: '0.1.0'
+  contact:
+    name: Agustin ZORZANO
+    email: apiteam@swagger.io
+    url: http://www.google.com
+
+servers:
+  - url: /
+
+tags:
+  - name: Health
+    description: API Health
+  - name: Learning
+    description: API Learn
+  - name: Prediction
+    description: API Predict
+
+security:
+  - basicAuth: []
+
+paths:
+  /ping:
+    get:
+      summary: Check the API health
+      security: [ ]
+      tags: [ Health ]
+      operationId: wine_predictor_api.services.healthcheck.ping
+      responses:
+        '200':
+          description: API is up and running
+  /wine/quality:
+    get:
+      summary: Estimate the quality of the winebased on several preselected features
+      tags: [ Prediction ]
+      operationId: wine_predictor_api.services.predictor.estimate_wine_quality
+      parameters:
+        - in: query
+          name: fixed_acidity
+          schema:
+            type: number
+            format: float
+            minimum: 4.6
+            maximum: 15.9
+          required: true
+          description: Nonvolatile, volatile acids of Wine. Value should be between 4.6 to 15.9
+        - in: query
+          name: volatile_acidity
+          schema:
+            type: number
+            format: float
+            minimum: 0.12
+            maximum: 1.58
+          required: true
+          description: The amount of acetic acid in wine. Value should be between 0.12 to 1.58
+        - in: query
+          name: citric_acid
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1.0
+          required: true
+          description: Adds flavors to wine and is found in small quantity. Value should be between 0.0 to 1.0
+        - in: query
+          name: residual_sugar
+          schema:
+            type: number
+            format: float
+            minimum: 0.9
+            maximum: 15.5
+          required: true
+          description: Sugar content after fermentation stops. Value should be between 0.9 to 15.5
+        - in: query
+          name: chlorides
+          schema:
+            type: number
+            format: float
+            minimum: 0.012
+            maximum: 0.612
+          required: true
+          description: Residual Salt in the wine. Value should be between 0.012 to 0.611
+        - in: query
+          name: free_sulfur_dioxide
+          schema:
+            type: number
+            format: float
+            minimum: 1.0
+            maximum: 72.0
+          required: true
+          description: The free form of SO2 exists in equilibrium between molecular SO2 and bisulfite ion. Value should be between 1.0 to 72.0
+        - in: query
+          name: total_sulfur_dioxide
+          schema:
+            type: number
+            format: float
+            minimum: 6.0
+            maximum: 289.0
+          required: true
+          description: Amount of free and bound forms of SO2. Value should be between 6.0 to 289.0
+        - in: query
+          name: density
+          schema:
+            type: number
+            format: float
+            minimum: 0.99007
+            maximum: 1.00368
+          required: true
+          description: The density of a substance is its mass per unit volume. Value should be between 0.99007 to 1.00368
+        - in: query
+          name: ph
+          schema:
+            type: number
+            format: float
+            minimum: 2.74
+            maximum: 4.01
+          required: true
+          description: Describes how acidic or basic a substance is. Value should be between 2.74 to 4.01
+        - in: query
+          name: sulphates
+          schema:
+            type: number
+            format: float
+            minimum: 0.33
+            maximum: 2.0
+          required: true
+          description: A wine additive that can contribute to sulfur dioxide gas (SO2) levels. Value should be between 0.33 to 2.0
+        - in: query
+          name: alcohol
+          schema:
+            type: number
+            format: float
+            minimum: 8.4
+            maximum: 14.9
+          required: true
+          description: Percentage of alcohol content in the wine. Value should be between 8.4 to 14.9
+      responses:
+        '200':
+          description: Wine quality is successfully estimated
+        '201':
+          description: Missing/Invalid required parameter
+        '404':
+          description: Model path is not found
+        '500':
+          description: Internal server error
+  /wine/model:
+    patch:
+      summary: (Re)train the wine quality model based on a predicted dataset
+      tags: [ Learning ]
+      operationId: wine_predictor_api.services.learner.train_model
+      responses:
+        '200':
+          description: New model has been successfully trained but discarded
+        '201':
+          description: New model has been successfully trained and saved as default
+        '404':
+          description: Model path is not found
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      x-basicInfoFunc: wine_predictor_api.security.authentication.basic_auth

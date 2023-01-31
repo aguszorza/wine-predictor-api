@@ -1,0 +1,7 @@
+connexion[swagger-ui]
+gunicorn
+numpy
+joblib
+scikit-learn
+pandas
+validators
