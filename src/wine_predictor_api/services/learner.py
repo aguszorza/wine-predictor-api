@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.linear_model import LinearRegression
 import validators
 import pickle
 from wine_predictor_api import api_config
@@ -59,7 +59,7 @@ def train_model():
         logger.error(f"File not found: {error}")
         status_code = 404
         return responses.get(status_code, default_response), status_code
-    Y = dataset['TARGET']#.apply(lambda y: 1 if y > 5 else 0)
+    Y = dataset['TARGET']
     X = dataset.drop('TARGET', axis=1)
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.25, random_state=42)
 

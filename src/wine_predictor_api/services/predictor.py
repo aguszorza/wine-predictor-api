@@ -59,5 +59,5 @@ def estimate_wine_quality(**kwargs):
         return {"estimation": int(round(prediction, 0))}, 200
     except FileNotFoundError:
         return "Model path is not found", 404
-    except:
+    except Exception:
         return "Internal server error", 500

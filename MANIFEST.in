@@ -1,0 +1,4 @@
+include VERSION
+include requirements.txt
+include dev-requirements.txt
+include src/wine_predictor_api/specs/*.yaml
